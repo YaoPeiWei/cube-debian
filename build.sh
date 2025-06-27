@@ -3,7 +3,7 @@
 set -e
 
 function lb_config_init () {
-    sudo lb config --distribution bookworm \
+    lb config --distribution bookworm \
         --archive-areas "main contrib" \
         --mirror-bootstrap "http://mirrors.ustc.edu.cn/debian" \
         --mirror-binary "http://mirrors.ustc.edu.cn/debian" \
@@ -26,6 +26,14 @@ function lb_build () {
     sudo lb build
 }
 
+function lb_clean () {
+    if [ -n "$1" ]; then
+        sudo lb clean "${@}"
+    else
+        sudo lb clean --all
+    fi
+}
+
 case $1 in
     config)
         lb_config_init
@@ -33,7 +41,10 @@ case $1 in
     build)
         lb_build
         ;;
+    clean)
+        lb_clean
+        ;;
     *)
-        echo "Usage: $0 {config|build}"
+        echo "Usage: $0 {config|build|clean}"
         ;;
 esac    
